@@ -1,0 +1,5 @@
+.build/
+bin/
+examples/basic
+examples/instanced_drawing
+.DS_Store

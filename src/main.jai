@@ -1,4 +1,5 @@
 main :: () {
+    // ----------------------------------------------------------------------------: Initialization & Swapchain
     result := gpu_init();
     assert(result == .SUCCESS);
     defer gpu_shutdown();
@@ -13,6 +14,8 @@ main :: () {
 
     gpu_init_swapchain(window, window_type);
     defer gpu_destroy_swapchain();
+
+    // ----------------------------------------------------------------------------: Pipelines & Shaders
 
     main_queue := gpu_get_queue(.MAIN, 0);
 
@@ -72,6 +75,8 @@ main :: () {
 
     pixel_data, pixel_gpu := gpu_arena_alloc(*gpu_arena, [3] float);
     pixel_data.* = .[1., 0., 1.];
+
+    // ----------------------------------------------------------------------------: Rendering Loop
 
     quit := false;
     while !quit {

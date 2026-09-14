@@ -1,10 +1,11 @@
 main :: () {
-    // ----------------------------------------------------------------------------: Initialization & Swapchain
+    // ----------------------------------------------------------------------------: Initialization
     result := gpu_init();
     assert(result == .SUCCESS);
     defer gpu_shutdown();
 
-    window := create_native_window(1280, 720, "ck: Hello, Sailor!");
+    imgui_input_prepare_window();
+    window := create_native_window(1600, 900, "ck: mewlife");
 
     window_type: Native_Window_Type;
     #if      OS == .WINDOWS then window_type = .WIN32;
@@ -12,71 +13,38 @@ main :: () {
     else #if OS == .MACOS   then window_type = .COCOA;
     else assert(false, "Unsupported OS");
 
-    gpu_init_swapchain(window, window_type);
+    // Prefer the newest completed frame. FIFO fallback uses two images to limit presentation queuing.
+    gpu_init_swapchain(window, window_type, preferred_present_modes = .[.MAILBOX, .FIFO], min_image_count = 2);
     defer gpu_destroy_swapchain();
-
-    // ----------------------------------------------------------------------------: Pipelines & Shaders
 
     main_queue := gpu_get_queue(.MAIN, 0);
 
-    success, vertex_spv := compile_shader("assets/shaders/hello_square_vs.slang");
-    assert(success);
-    success=, pixel_spv := compile_shader("assets/shaders/hello_square_ps.slang");
-    assert(success);
+    imgui_context := ImGui.CreateContext();
+    assert(imgui_context != null);
+    defer ImGui.DestroyContext(imgui_context);
+    io := ImGui.GetIO();
+    io.ConfigFlags_ |= .NavEnableKeyboard;
+    io.IniFilename = null;
+    imgui_theme_apply_style();
 
-    blend_state: Gpu_Blend_Desc;
-    raster_desc := Gpu_Raster_Desc.{
-        cull = .CW,
-        color_targets = .[
-            .{format = .B8G8R8A8_UNORM}
-        ],
-        blend_state = *blend_state,
-    };
-    depth_desc := Gpu_Depth_Stencil_Desc.{
-        depth_test = .NEVER,
-        depth_mode = .NONE,
-    };
+    dpi_scale := imgui_input_dpi_scale(window);
+    imgui_load_font(dpi_scale);
+    defer imgui_shutdown_font();
 
-    graphics_pipeline := gpu_create_graphics_pipeline(vertex_spv, pixel_spv, raster_desc);
-    defer gpu_free_pipeline(graphics_pipeline);
+    input: Imgui_Input;
+    imgui_input_init(*input, window);
+    defer imgui_input_shutdown(*input);
+    renderer: Imgui_Sgpu;
+    imgui_sgpu_init(*renderer);
+    defer imgui_sgpu_shutdown(*renderer);
 
-    Vertex2D :: struct {
-        x: float;
-        y: float;
-    }
+    // Naysayer background from .refs/theme.jai.
+    DEFAULT_BACKGROUND :: Vector4.{6.0 / 255, 38.0 / 255, 38.0 / 255, 1};
+    background_color := DEFAULT_BACKGROUND;
+    show_demo := false;
+    needs_resize := false;
 
-    gpu_arena := gpu_make_arena(1024);
-    defer gpu_free_arena(gpu_arena);
-
-    vertex_buffer, vertex_gpu := gpu_arena_alloc(*gpu_arena, [4] Vertex2D);
-    vertex_buffer.* = .[
-        .{ 0.5,   0.5 },
-        .{ 0.5,  -0.5 },
-        .{ -0.5, -0.5 },
-        .{ -0.5, +0.5 },
-    ];
-
-    vertex_colors, colors_gpu := gpu_arena_alloc(*gpu_arena, [12] float);
-    vertex_colors.* = .[
-        1., 0., 0.,
-        0., 1., 0.,
-        0., 0., 1.,
-        1., 1., 1.,
-    ];
-
-    param_block, vertex_params_gpu := gpu_arena_alloc(*gpu_arena, [2] Gpu_Ptr);
-    param_block.* = .[vertex_gpu, colors_gpu];
-
-    index_buffer, index_gpu := gpu_arena_alloc(*gpu_arena, [6] u32);
-    index_buffer.* = .[
-        0, 3, 1,
-        1, 3, 2,
-    ];
-
-    pixel_data, pixel_gpu := gpu_arena_alloc(*gpu_arena, [3] float);
-    pixel_data.* = .[1., 0., 1.];
-
-    // ----------------------------------------------------------------------------: Rendering Loop
+    // ----------------------------------------------------------------------------: Rendering loop
 
     quit := false;
     while !quit {
@@ -84,40 +52,69 @@ main :: () {
         for events_this_frame {
             if it.type == .QUIT then quit = true;
         }
-        if get_window_resizes().count > 0 {
+        if quit then break;
+
+        if get_window_resizes().count > 0 then needs_resize = true;
+        width, height := imgui_input_window_size(window);
+        new_dpi_scale := imgui_input_dpi_scale(window);
+        if new_dpi_scale != dpi_scale {
+            dpi_scale = new_dpi_scale;
+            imgui_load_font(dpi_scale);
+            imgui_sgpu_upload_font_atlas(*renderer);
+        }
+        if width == 0 || height == 0 {
+            imgui_input_update(*input, width, height, dpi_scale);
+            // A zero-sized Vulkan swapchain is invalid. Resize once the window returns.
+            needs_resize = true;
+            sleep_milliseconds(16);
+            continue;
+        }
+        if needs_resize {
             gpu_swapchain_resize();
+            needs_resize = false;
         }
 
         result=, swapchain_image := gpu_swapchain_acquire();
         assert(result == .SUCCESS);
-        if !swapchain_image {
+        // Acquire may wait for the GPU or display. Sample the mouse after that wait, just before NewFrame.
+        imgui_input_update(*input, width, height, dpi_scale);
+        if swapchain_image == 0 {
+            needs_resize = true;
+            sleep_milliseconds(16);
             continue;
         }
 
-        result=, cmd_buff := gpu_start_command_recording(main_queue);
-        assert(result == .SUCCESS);
-        {
-            render_desc := Gpu_Render_Pass_Desc.{
-                color_targets = .[
-                    .{
-                        view = swapchain_image,
-                        load_op = .CLEAR,
-                        store_op = .STORE,
-                        clear_color._float = .[0, 0, 0, 1],
-                    }
-                ]
-            };
-            gpu_begin_render_pass(cmd_buff, render_desc);
-            gpu_set_depth_stencil_state(cmd_buff, depth_desc);
-
-            gpu_set_pipeline(cmd_buff, graphics_pipeline);
-
-            gpu_draw_indexed_instanced(cmd_buff, vertex_params_gpu, pixel_gpu, index_gpu, 6, 1);
-
-            gpu_end_render_pass(cmd_buff);
+        ImGui.NewFrame();
+        ImGui.SetNextWindowPos(.{24, 24}, .FirstUseEver);
+        ImGui.SetNextWindowSize(.{360, 0}, .FirstUseEver);
+        if ImGui.Begin("Rendering Settings", flags = .AlwaysAutoResize) {
+            ImGui.SetNextItemWidth(220);
+            ImGui.ColorEdit3("Background Color", *background_color.xyz.component, .Float);
+            if ImGui.Button("Reset") then background_color = DEFAULT_BACKGROUND;
+            ImGui.Separator();
+            ImGui.Text("FPS: %", cast(s32) io.Framerate);
+            ImGui.Checkbox("ImGui Demo", *show_demo);
         }
+        ImGui.End();
+        if show_demo then ImGui.ShowDemoWindow(*show_demo);
+        imgui_input_update_cursor(*input);
+        ImGui.Render();
 
-        gpu_submit_and_present(cmd_buff);
+        result=, cmd := gpu_start_command_recording(main_queue);
+        assert(result == .SUCCESS);
+        render_desc := Gpu_Render_Pass_Desc.{
+            color_targets = .[.{
+                view = swapchain_image,
+                load_op = .CLEAR,
+                store_op = .STORE,
+                clear_color._float = background_color.component,
+            }],
+        };
+        result = gpu_begin_render_pass(cmd, render_desc);
+        assert(result == .SUCCESS);
+        ui_completion := imgui_sgpu_render(*renderer, cmd, swapchain_image, ImGui.GetDrawData());
+        gpu_end_render_pass(cmd);
+        gpu_submit_and_present(cmd, signals = .[ui_completion]);
     }
 
     gpu_wait_idle();
@@ -126,5 +123,11 @@ main :: () {
 #import "sgpu"(VALIDATION = true);
 #import "Basic";
 #import "Input";
+#import "Math";
+ImGui :: #import "ImGui";
 
 #load "utils/window.jai";
+#load "ui/imgui_input.jai";
+#load "ui/imgui_font.jai";
+#load "ui/imgui_theme.jai";
+#load "ui/imgui_sgpu.jai";

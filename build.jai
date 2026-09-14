@@ -5,12 +5,28 @@
 
     make_directory_if_it_does_not_exist("bin");
 
-    compile("main");
+    if compile("main") {
+        copy_module_libraries_to_target("bin");
 
-    copy_module_libraries_to_target("bin");
+        #if OS == .WINDOWS {
+            // Embed per-monitor DPI awareness using Jai's resource API, without requiring mt.exe on PATH.
+            Resources :: #import "Windows_Resources";
+            success := Resources.add_manifest_to_executable("bin/main.exe", .{
+                dpi_aware = true,
+                use_segment_heap = false,
+            });
+            assert(success, "Failed to embed the Windows DPI manifest.");
+
+            // SGPU's Slang dependency is nested below modules/sgpu/modules.
+            success = copy_file("modules/sgpu/modules/slang/win/slang-compiler.dll", "bin/slang-compiler.dll");
+            assert(success, "Failed to deploy slang-compiler.dll.");
+        }
+    } else {
+        compiler_set_workspace_status(.FAILED);
+    }
 }
 
-compile :: (name: string) {
+compile :: (name: string) -> bool {
     w := compiler_create_workspace(name);
     options := get_build_options();
     options.output_type = .EXECUTABLE;
@@ -23,7 +39,19 @@ compile :: (name: string) {
 
     set_build_options(options, w);
 
+    compiler_begin_intercept(w);
+    defer compiler_end_intercept(w);
     add_build_file(tprint("src/%.jai", name), w);
+    success := false;
+    while true {
+        message := compiler_wait_for_message();
+        if message.kind == .COMPLETE {
+            complete := cast(*Message_Complete) message;
+            success = complete.error_code == .NONE;
+            break;
+        }
+    }
+    return success;
 }
 
 gcc_lib_dir :: () -> string {

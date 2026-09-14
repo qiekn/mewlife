@@ -39,7 +39,7 @@ gpu_malloc :: (size: s64, memory_type: Memory_Type = .DEFAULT) -> (mapped: *void
 
     buffer_create_info := VkBufferCreateInfo.{
         // To avoid exposing buffer usage flags to the API, we allow all buffers to be used for any type of operations
-        usage = .STORAGE_BUFFER_BIT | .SHADER_DEVICE_ADDRESS_BIT | .TRANSFER_DST_BIT | .TRANSFER_SRC_BIT | .INDIRECT_BUFFER_BIT,
+        usage = .STORAGE_BUFFER_BIT | .SHADER_DEVICE_ADDRESS_BIT | .TRANSFER_DST_BIT | .TRANSFER_SRC_BIT | .INDIRECT_BUFFER_BIT | .INDEX_BUFFER_BIT,
         size = size.(u64),
         sharingMode = .CONCURRENT,
         queueFamilyIndexCount = num_queue_families,

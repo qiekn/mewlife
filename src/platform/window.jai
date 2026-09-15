@@ -1,4 +1,4 @@
-// Width and height are logical client dimensions, before display DPI scaling.
+// Native window size is specified in logical client dimensions, before display DPI scaling.
 create_native_window :: (width: int, height: int, name: string) -> u64 {
     // Standard window creation module does not yet support creating a window with Metal surface for macOS.
     // We will use the standard library module on all other platforms.

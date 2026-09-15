@@ -1,0 +1,116 @@
+{
+  "character": "Priestess",
+  "source_id": "cleric",
+  "format_version": 1,
+  "coordinates": "Y up, metres; row-major matrices",
+  "mesh": {
+    "vertices": 26418,
+    "triangles": 28119,
+    "joints": 254,
+    "parts": 11,
+    "bounds_min": [
+      -1.02149904,
+      0.00236615376,
+      -0.78705585
+    ],
+    "bounds_max": [
+      0.549519002,
+      1.50131834,
+      0.741156518
+    ]
+  },
+  "clips": {
+    "idle": {
+      "source": "data/characters/cleric/animations/cleric_active_idle_01.anim",
+      "sha256": "8ee324fc09e383af21b2fb137680ed81542e933f6f9e002d1bb432193ba48b96",
+      "frames": 111,
+      "fps": 30,
+      "loop": true
+    },
+    "walk": {
+      "source": "data/characters/cleric/animations/cleric_active_moveForward_01.anim",
+      "sha256": "7c3384be33a0f60f416db5334259d22f94b44c2e33552a0bfd7011e9e7efbec6",
+      "frames": 21,
+      "fps": 30,
+      "loop": true
+    },
+    "push": {
+      "source": "data/characters/cleric/animations/cleric_push_walkForward_01.anim",
+      "sha256": "52751686dcefcbbf383da356d7e18d6eeaf5c73245342f7b17f7c227509ff6e8",
+      "frames": 21,
+      "fps": 30,
+      "loop": true
+    },
+    "turn_left": {
+      "source": "data/characters/cleric/animations/cleric_active_idleToMove90Left_01.anim",
+      "sha256": "e2ddb548a27cad8558df612eb495c1326d20e0da2b98aef2886bf44d6eecbc45",
+      "frames": 31,
+      "fps": 30,
+      "loop": false
+    },
+    "turn_right": {
+      "source": "data/characters/cleric/animations/cleric_active_idleToMove90Right_01.anim",
+      "sha256": "3baade1314ebd189af4ce14e11011b0e9bd10df8027bc72096898ce4c57fa1b6",
+      "frames": 31,
+      "fps": 30,
+      "loop": false
+    },
+    "turn_back": {
+      "source": "data/characters/cleric/animations/cleric_active_idleToMove180Right_01.anim",
+      "sha256": "b12dac981aff52aa1a239623b46bf87cd5f8745b789ca9950a57603103a85a60",
+      "frames": 31,
+      "fps": 30,
+      "loop": false
+    },
+    "push_turn_left": {
+      "source": "data/characters/cleric/animations/cleric_active_idleToPushMove90Left_01.anim",
+      "sha256": "32311bc2095852b9e1c2f3f07278a37ce69c6b916b01f34085a670e9e45c1c2e",
+      "frames": 31,
+      "fps": 30,
+      "loop": false
+    },
+    "push_turn_right": {
+      "source": "data/characters/cleric/animations/cleric_active_idleToPushMove90Right_01.anim",
+      "sha256": "b363fdb9aa94ae8b03501f0656a799b22187223b99f4e78295a06d8a48452af1",
+      "frames": 31,
+      "fps": 30,
+      "loop": false
+    },
+    "push_turn_back": {
+      "source": "data/characters/cleric/animations/cleric_active_idleToPushMove180Right_01.anim",
+      "sha256": "2629c49f5353f5b9aa20a5b971886f2e6226769998c006f1cc0c15978d4533a7",
+      "frames": 31,
+      "fps": 30,
+      "loop": false
+    },
+    "blocked": {
+      "source": "data/characters/cleric/animations/cleric_active_bumpForward_01.anim",
+      "sha256": "e633a95e75c63cf1ee75cea7eb6c8507a2b61f4fcafb61e108e7ef9e0383e394",
+      "frames": 43,
+      "fps": 30,
+      "loop": false
+    },
+    "blocked_left": {
+      "source": "data/characters/cleric/animations/cleric_active_idleToBlocked90Left_01.anim",
+      "sha256": "aef2ae1dcdcd1a8446c1d34c4ce1c026cfee6eee3bdc30b4b3f39891e13d3697",
+      "frames": 101,
+      "fps": 30,
+      "loop": false
+    },
+    "blocked_right": {
+      "source": "data/characters/cleric/animations/cleric_active_idleToBlocked90Right_01.anim",
+      "sha256": "e181f58117a249b57066fb089edcf10f9b94edde217c7f89c76e628d66e4c99d",
+      "frames": 101,
+      "fps": 30,
+      "loop": false
+    },
+    "blocked_back": {
+      "source": "data/characters/cleric/animations/cleric_active_idleToBlocked180Right_01.anim",
+      "sha256": "6f426e7be07c26283bd6fb384e77c61d63b4482b339eba3277ef3634f158c88c",
+      "frames": 101,
+      "fps": 30,
+      "loop": false
+    }
+  },
+  "run": "Uses walk at a faster playback rate; no separate run clip exists in this source set."
+}

@@ -1,0 +1,1227 @@
+{
+  "source": "E:/SteamLibrary/steamapps/common/Order of the Sinking Star Demo",
+  "bank_version": 154,
+  "format": "PCM16 stereo 48000 Hz",
+  "selection": "Granite floor, crystal object, cleric character; three representative variants.",
+  "runtime": "Animation markers and world time belong to mewlife; Wwise DSP/RTPCs are omitted.",
+  "banks": {
+    "Gameplay_and_characters.bnk": "ff2a8f314248470dabf17fddd62a4c7310c3ba72b384d64961d9f71bf0f53259",
+    "Gameplay_and_characters_media.bnk": "c734771cf712ffb58dc976964aeba5d9b4b7f2d39e44a2d1c9e70dd38c160b63"
+  },
+  "sounds": {
+    "step": {
+      "event": "char_cleric_anim_step_slowMoOnly",
+      "event_id": 998188137,
+      "variants": [
+        {
+          "file": "step_01.wav",
+          "duration": 0.35852083333333334,
+          "layer_gain": 1.0,
+          "peak_attenuation": 1.0,
+          "sha256": "36aa2014b95ab41f69072faa427bfe35efc35bd9d97ff2fed739fce2e5ec3c35",
+          "sources": [
+            {
+              "path": [
+                998188137,
+                276961659,
+                955546396,
+                19576547,
+                315747089,
+                982299099,
+                23145331
+              ],
+              "media_id": 238729095,
+              "sha256": "14cefc060f7225dc1dc81d81c9647ec07fc234997424d193efd4119a3da78411"
+            }
+          ],
+          "switches": [
+            {
+              "node": 19576547,
+              "group": "state_timeRate",
+              "state": "underlying slow-motion footsteps (host owns timing)",
+              "children": [
+                315747089
+              ]
+            },
+            {
+              "node": 315747089,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                982299099
+              ]
+            }
+          ]
+        },
+        {
+          "file": "step_02.wav",
+          "duration": 0.3633958333333333,
+          "layer_gain": 1.0,
+          "peak_attenuation": 1.0,
+          "sha256": "484e22caaed51a5bf426933d39a57e5c4dbc6f2b8e6dd729d1fb1b914c4cff22",
+          "sources": [
+            {
+              "path": [
+                998188137,
+                276961659,
+                955546396,
+                19576547,
+                315747089,
+                982299099,
+                27481079
+              ],
+              "media_id": 1045236779,
+              "sha256": "7588a7f59ec8b71ac6a4d021a11233d9c4a8b56b2ee0eb0d6892480235a4f2c2"
+            }
+          ],
+          "switches": [
+            {
+              "node": 19576547,
+              "group": "state_timeRate",
+              "state": "underlying slow-motion footsteps (host owns timing)",
+              "children": [
+                315747089
+              ]
+            },
+            {
+              "node": 315747089,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                982299099
+              ]
+            }
+          ]
+        },
+        {
+          "file": "step_03.wav",
+          "duration": 0.4758125,
+          "layer_gain": 1.0,
+          "peak_attenuation": 1.0,
+          "sha256": "5fcc3a18165344839239abd5a25452822e928dfb1dcb2482762385182fbac04a",
+          "sources": [
+            {
+              "path": [
+                998188137,
+                276961659,
+                955546396,
+                19576547,
+                315747089,
+                982299099,
+                32714844
+              ],
+              "media_id": 367523953,
+              "sha256": "c0a2337b6d7be774fb0a090427a6d5d15c3219ab61f1a434bfce1a293fa8b7f0"
+            }
+          ],
+          "switches": [
+            {
+              "node": 19576547,
+              "group": "state_timeRate",
+              "state": "underlying slow-motion footsteps (host owns timing)",
+              "children": [
+                315747089
+              ]
+            },
+            {
+              "node": 315747089,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                982299099
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "foot_stop": {
+      "event": "char_cleric_anim_footStop",
+      "event_id": 2472453871,
+      "variants": [
+        {
+          "file": "foot_stop_01.wav",
+          "duration": 0.3236041666666667,
+          "layer_gain": 1.0,
+          "peak_attenuation": 1.0,
+          "sha256": "15452b1b94996a732f88f65505158f2379d495064ef734cd9193c0a74f2ef3ed",
+          "sources": [
+            {
+              "path": [
+                2472453871,
+                526738377,
+                851920027,
+                348236911,
+                550500478,
+                662563
+              ],
+              "media_id": 582907204,
+              "sha256": "6cccdc806efcdf1592066023188aa8bed5cd15b7a6bce1551e8da9eadc3f647b"
+            }
+          ],
+          "switches": [
+            {
+              "node": 348236911,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                550500478
+              ]
+            },
+            {
+              "node": 188803104,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": []
+            }
+          ]
+        },
+        {
+          "file": "foot_stop_02.wav",
+          "duration": 0.4157708333333333,
+          "layer_gain": 1.0,
+          "peak_attenuation": 1.0,
+          "sha256": "f8c4234f7e2402750f4106ed3db6d754c090d64c5b85894b2e48a4e32d5d3d99",
+          "sources": [
+            {
+              "path": [
+                2472453871,
+                526738377,
+                851920027,
+                348236911,
+                550500478,
+                137806907
+              ],
+              "media_id": 788665639,
+              "sha256": "1c0f28735e2441846641555cc4c4d266b305b138d48ddec79fdf233964e5d58b"
+            }
+          ],
+          "switches": [
+            {
+              "node": 348236911,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                550500478
+              ]
+            },
+            {
+              "node": 188803104,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": []
+            }
+          ]
+        },
+        {
+          "file": "foot_stop_03.wav",
+          "duration": 0.16627083333333334,
+          "layer_gain": 1.0,
+          "peak_attenuation": 1.0,
+          "sha256": "2551bc74b7eba9d9a8107ba4a4c2023dbefb5686518ccdb69cab8c81d45eff41",
+          "sources": [
+            {
+              "path": [
+                2472453871,
+                526738377,
+                851920027,
+                348236911,
+                550500478,
+                162375378
+              ],
+              "media_id": 13253313,
+              "sha256": "c9a21eecd4a103c3119d36ac43743a357189e0748b4cb85ef50fc93f2a8a47f5"
+            }
+          ],
+          "switches": [
+            {
+              "node": 348236911,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                550500478
+              ]
+            },
+            {
+              "node": 188803104,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "foot_stop_soft": {
+      "event": "char_cleric_anim_footStop_lo",
+      "event_id": 2592705137,
+      "variants": [
+        {
+          "file": "foot_stop_soft_01.wav",
+          "duration": 0.31825,
+          "layer_gain": 1.0,
+          "peak_attenuation": 1.0,
+          "sha256": "d536d192c7f72ce4aab7d3403cf9e3b5329b9a3db95bd372430aeabc4b5e04a6",
+          "sources": [
+            {
+              "path": [
+                2592705137,
+                877688697,
+                332104436,
+                1067815579,
+                1033953353,
+                173262846
+              ],
+              "media_id": 551109381,
+              "sha256": "06aa80792b5655d7a5864462ef09e55c3c10dd911bc258a9018e77384f4134f0"
+            }
+          ],
+          "switches": [
+            {
+              "node": 1067815579,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                1033953353
+              ]
+            }
+          ]
+        },
+        {
+          "file": "foot_stop_soft_02.wav",
+          "duration": 0.16627083333333334,
+          "layer_gain": 1.0,
+          "peak_attenuation": 1.0,
+          "sha256": "2551bc74b7eba9d9a8107ba4a4c2023dbefb5686518ccdb69cab8c81d45eff41",
+          "sources": [
+            {
+              "path": [
+                2592705137,
+                877688697,
+                332104436,
+                1067815579,
+                1033953353,
+                174735084
+              ],
+              "media_id": 13253313,
+              "sha256": "c9a21eecd4a103c3119d36ac43743a357189e0748b4cb85ef50fc93f2a8a47f5"
+            }
+          ],
+          "switches": [
+            {
+              "node": 1067815579,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                1033953353
+              ]
+            }
+          ]
+        },
+        {
+          "file": "foot_stop_soft_03.wav",
+          "duration": 0.27860416666666665,
+          "layer_gain": 1.0,
+          "peak_attenuation": 1.0,
+          "sha256": "35e52a9432c027e4eb8d3aca66b6141ba5336d9945b484aa8edcd901a186af0a",
+          "sources": [
+            {
+              "path": [
+                2592705137,
+                877688697,
+                332104436,
+                1067815579,
+                1033953353,
+                184341767
+              ],
+              "media_id": 435073976,
+              "sha256": "7568e6c56934a4c086a9804b7fa6e73de0f38623c178f2d2ea5835724ef00259"
+            }
+          ],
+          "switches": [
+            {
+              "node": 1067815579,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                1033953353
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "cloth": {
+      "event": "char_cleric_anim_cloth",
+      "event_id": 857529861,
+      "variants": [
+        {
+          "file": "cloth_01.wav",
+          "duration": 0.7801458333333333,
+          "layer_gain": 0.7071067811865475,
+          "peak_attenuation": 1.0,
+          "sha256": "bb58e567531859333cbf0e967de98433e7d2e2a1c2b748d0fc7504ef1efc7076",
+          "sources": [
+            {
+              "path": [
+                857529861,
+                904817622,
+                796410070,
+                208871178,
+                364911279,
+                103724710
+              ],
+              "media_id": 922984467,
+              "sha256": "b354c512e058a00239d882df28e465e53fd0d0e418ddb2fb51be31a613d07d1c"
+            },
+            {
+              "path": [
+                857529861,
+                904817622,
+                796410070,
+                793293819,
+                61987646
+              ],
+              "media_id": 436757100,
+              "sha256": "68ccc2b5ef3c1727f6c5fdb1a7c85e2a2951ef08959db7b807fcb3856eb3c0f0"
+            }
+          ],
+          "switches": [
+            {
+              "node": 208871178,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                364911279
+              ]
+            }
+          ]
+        },
+        {
+          "file": "cloth_02.wav",
+          "duration": 0.691375,
+          "layer_gain": 0.7071067811865475,
+          "peak_attenuation": 1.0,
+          "sha256": "65dace7277632535ffc55fe26a68934cd6f84d17743f3808d32af6c8b2a4e1d7",
+          "sources": [
+            {
+              "path": [
+                857529861,
+                904817622,
+                796410070,
+                208871178,
+                364911279,
+                135964154
+              ],
+              "media_id": 178782042,
+              "sha256": "7947003b70804afae1b3dccd7cb309c993ca082d2a8b194e35df60b2fd8c7d56"
+            },
+            {
+              "path": [
+                857529861,
+                904817622,
+                796410070,
+                793293819,
+                203126789
+              ],
+              "media_id": 468646972,
+              "sha256": "9af621ddfccf06827f77f2e02f8d5b415f7042161a8cc3b697a4c8317559b0d1"
+            }
+          ],
+          "switches": [
+            {
+              "node": 208871178,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                364911279
+              ]
+            }
+          ]
+        },
+        {
+          "file": "cloth_03.wav",
+          "duration": 0.9119375,
+          "layer_gain": 0.7071067811865475,
+          "peak_attenuation": 1.0,
+          "sha256": "3808f6303b7cf7622a3012c603790b320fdcedf1ee1ce2c816a2ee056a5c6edd",
+          "sources": [
+            {
+              "path": [
+                857529861,
+                904817622,
+                796410070,
+                208871178,
+                364911279,
+                148630379
+              ],
+              "media_id": 421408446,
+              "sha256": "24198e56c6d733fc3fdf8dd9ec233996c0b5b99ffa79cf4c47dcd7c77b07ca3e"
+            },
+            {
+              "path": [
+                857529861,
+                904817622,
+                796410070,
+                793293819,
+                278706432
+              ],
+              "media_id": 566385417,
+              "sha256": "575abc81e739d4c78de48779927d4133e9b7861519d47cf65e8076b055664df3"
+            }
+          ],
+          "switches": [
+            {
+              "node": 208871178,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                364911279
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "stick_slide": {
+      "event": "char_cleric_anim_stickSlide",
+      "event_id": 2409252324,
+      "variants": [
+        {
+          "file": "stick_slide_01.wav",
+          "duration": 0.4733125,
+          "layer_gain": 1.0,
+          "peak_attenuation": 1.0,
+          "sha256": "fd4413dafa2b04ef4d4beab8878631227ba136731796a7e9b487b4376e9d571d",
+          "sources": [
+            {
+              "path": [
+                2409252324,
+                1069711080,
+                953398877,
+                10367289,
+                602068629,
+                166896751,
+                51823841
+              ],
+              "media_id": 212796752,
+              "sha256": "fd5b11fade742f09f583e011eaa0f3290c200a4fcf2010b13107e6cdb96b1d67"
+            }
+          ],
+          "switches": [
+            {
+              "node": 10367289,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                602068629
+              ]
+            }
+          ]
+        },
+        {
+          "file": "stick_slide_02.wav",
+          "duration": 0.23960416666666667,
+          "layer_gain": 1.0,
+          "peak_attenuation": 1.0,
+          "sha256": "b915c4e21fec494867582732a18e4c169470cb8e39c10e1096f4bf3d08b24ba1",
+          "sources": [
+            {
+              "path": [
+                2409252324,
+                1069711080,
+                953398877,
+                10367289,
+                602068629,
+                701602112,
+                165627897
+              ],
+              "media_id": 129188112,
+              "sha256": "4516305a1489cd051edc1ee7ee1295dfcaabe2469be907358f7b1e46a005a575"
+            }
+          ],
+          "switches": [
+            {
+              "node": 10367289,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                602068629
+              ]
+            }
+          ]
+        },
+        {
+          "file": "stick_slide_03.wav",
+          "duration": 0.3934166666666667,
+          "layer_gain": 1.0,
+          "peak_attenuation": 1.0,
+          "sha256": "1ebe76a4939f8293ef9d88f752bf2f3be18dccc9cf4f292fa276da7d9782568c",
+          "sources": [
+            {
+              "path": [
+                2409252324,
+                1069711080,
+                953398877,
+                10367289,
+                602068629,
+                166896751,
+                149466437
+              ],
+              "media_id": 133460550,
+              "sha256": "060daade69168c3f7c8445ee4fbbf316f29e324603492e636f3e85ff470bd6b5"
+            }
+          ],
+          "switches": [
+            {
+              "node": 10367289,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": [
+                602068629
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "push": {
+      "event": "push_block",
+      "event_id": 3338969127,
+      "variants": [
+        {
+          "file": "push_01.wav",
+          "duration": 0.49933333333333335,
+          "layer_gain": 0.5773502691896258,
+          "peak_attenuation": 1.0,
+          "sha256": "c2e4a39407188a1e7a1ede748c7f8ecdfe08f53bc36bce9d408a623b5640d2c4",
+          "sources": [
+            {
+              "path": [
+                3338969127,
+                753825417,
+                146119379,
+                112191601,
+                162216810
+              ],
+              "media_id": 293299627,
+              "sha256": "bfc2c9e77c81c1b53096968a7d8953493ff10b16a497d8c01aaab17847bc2866"
+            },
+            {
+              "path": [
+                3338969127,
+                753825417,
+                146119379,
+                798560169,
+                275884414,
+                81338698
+              ],
+              "media_id": 631692647,
+              "sha256": "9ff49bc2ad38412623ea9dbbb6b92b3398fd2d7c19fe170a7fe8a1b827b2b071"
+            },
+            {
+              "path": [
+                3338969127,
+                753825417,
+                146119379,
+                877832951,
+                402805337,
+                99583503
+              ],
+              "media_id": 743470480,
+              "sha256": "ec2953971d23d7e190d09ba79f77efce48b4ce4a1a3c66ea4d0b082b26994304"
+            }
+          ],
+          "switches": [
+            {
+              "node": 677095167,
+              "group": "state_timeRate",
+              "state": "zero",
+              "children": []
+            },
+            {
+              "node": 798560169,
+              "group": "switch_object_type",
+              "state": "crystal",
+              "children": [
+                275884414
+              ]
+            },
+            {
+              "node": 877832951,
+              "group": "switch_object_type",
+              "state": "crystal",
+              "children": [
+                402805337
+              ]
+            },
+            {
+              "node": 925847003,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": []
+            }
+          ]
+        },
+        {
+          "file": "push_02.wav",
+          "duration": 0.5394583333333334,
+          "layer_gain": 0.5773502691896258,
+          "peak_attenuation": 1.0,
+          "sha256": "ea49a48bdf8349baecd9ae17c7fa9316fc2f1959ac0a885950019e5f7d58c1ff",
+          "sources": [
+            {
+              "path": [
+                3338969127,
+                753825417,
+                146119379,
+                112191601,
+                237624376
+              ],
+              "media_id": 698461505,
+              "sha256": "b721820aeba47854afd493bb0f1ce1626308275277f4b6371e769823eec0bd11"
+            },
+            {
+              "path": [
+                3338969127,
+                753825417,
+                146119379,
+                798560169,
+                275884414,
+                216316484
+              ],
+              "media_id": 739243054,
+              "sha256": "479eb9f12950a9f0050c7266f794fed5fb1af749519e226ced9e4cb0334f7fcf"
+            },
+            {
+              "path": [
+                3338969127,
+                753825417,
+                146119379,
+                877832951,
+                402805337,
+                239774525
+              ],
+              "media_id": 767301001,
+              "sha256": "c5988393b18b460c8c48d414eddac0308b164443f443137614c267d2411d6d20"
+            }
+          ],
+          "switches": [
+            {
+              "node": 677095167,
+              "group": "state_timeRate",
+              "state": "zero",
+              "children": []
+            },
+            {
+              "node": 798560169,
+              "group": "switch_object_type",
+              "state": "crystal",
+              "children": [
+                275884414
+              ]
+            },
+            {
+              "node": 877832951,
+              "group": "switch_object_type",
+              "state": "crystal",
+              "children": [
+                402805337
+              ]
+            },
+            {
+              "node": 925847003,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": []
+            }
+          ]
+        },
+        {
+          "file": "push_03.wav",
+          "duration": 0.5165625,
+          "layer_gain": 0.5773502691896258,
+          "peak_attenuation": 1.0,
+          "sha256": "f9dd950a4ff238739b44e22c30ab316f2c31c8c2d09e4e13f76950e2b42731fe",
+          "sources": [
+            {
+              "path": [
+                3338969127,
+                753825417,
+                146119379,
+                112191601,
+                298926541
+              ],
+              "media_id": 1017080206,
+              "sha256": "a8c77280b62459fbd46e8ab8de51f8860afe0f65ad6235cc3f164d324ec7f4e2"
+            },
+            {
+              "path": [
+                3338969127,
+                753825417,
+                146119379,
+                798560169,
+                275884414,
+                336310580
+              ],
+              "media_id": 368822287,
+              "sha256": "f777b019433f3870a304be866c747265f407ecb89d033356a8d3316b4e3a68ad"
+            },
+            {
+              "path": [
+                3338969127,
+                753825417,
+                146119379,
+                877832951,
+                402805337,
+                243197385
+              ],
+              "media_id": 119957430,
+              "sha256": "444c6bf40e4790922544e12186fc5c094906b145f4f55bd356d180f06780335c"
+            }
+          ],
+          "switches": [
+            {
+              "node": 677095167,
+              "group": "state_timeRate",
+              "state": "zero",
+              "children": []
+            },
+            {
+              "node": 798560169,
+              "group": "switch_object_type",
+              "state": "crystal",
+              "children": [
+                275884414
+              ]
+            },
+            {
+              "node": 877832951,
+              "group": "switch_object_type",
+              "state": "crystal",
+              "children": [
+                402805337
+              ]
+            },
+            {
+              "node": 925847003,
+              "group": "switch_surfacematerial",
+              "state": "granite",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "push_failed": {
+      "event": "no_multipush",
+      "event_id": 2751451290,
+      "variants": [
+        {
+          "file": "push_failed_01.wav",
+          "duration": 0.5955625,
+          "layer_gain": 0.5773502691896258,
+          "peak_attenuation": 1.0,
+          "sha256": "66dbc08ffe23650fd5866ba8ebef82cbd8593b6a6d620cbecad07af9d6ea94de",
+          "sources": [
+            {
+              "path": [
+                2751451290,
+                196655700,
+                167129738,
+                205057684,
+                880996780,
+                3096078
+              ],
+              "media_id": 77677652,
+              "sha256": "727a27eed527735d985e7ce5533026e8ec63028fef6df5810d63f1b14cbc8560"
+            },
+            {
+              "path": [
+                2751451290,
+                39878229,
+                986654846,
+                194688070,
+                350484025
+              ],
+              "media_id": 668461311,
+              "sha256": "bb8d16d949fc3753f3fa36e030781a07b7173c63c58491de10332079608021af"
+            },
+            {
+              "path": [
+                2751451290,
+                39878229,
+                986654846,
+                300722653,
+                161655227
+              ],
+              "media_id": 44793333,
+              "sha256": "8dae9f738a874c5276b70c2576dcb89229076b72831277ad8a956c0b50d29cc7"
+            }
+          ],
+          "switches": [
+            {
+              "node": 205057684,
+              "group": "switch_object_type",
+              "state": "crystal",
+              "children": [
+                880996780
+              ]
+            },
+            {
+              "node": 979573599,
+              "group": "character switch",
+              "state": "cleric",
+              "children": []
+            }
+          ]
+        },
+        {
+          "file": "push_failed_02.wav",
+          "duration": 0.5126458333333334,
+          "layer_gain": 0.5773502691896258,
+          "peak_attenuation": 1.0,
+          "sha256": "3af6b516fb26878cee6aa6f95264ae11aa035288a683c02faee500dd4d04c3f4",
+          "sources": [
+            {
+              "path": [
+                2751451290,
+                196655700,
+                167129738,
+                205057684,
+                880996780,
+                31971673
+              ],
+              "media_id": 797069537,
+              "sha256": "56cac876cc7c4ce886749b67a8920d196e46828c68ab97d2cef7872a0a38ab57"
+            },
+            {
+              "path": [
+                2751451290,
+                39878229,
+                986654846,
+                194688070,
+                517863714
+              ],
+              "media_id": 180610290,
+              "sha256": "994e9592bfc56f0a12994985c6840547b2b33ca22e2339f57e6341b9ea45c844"
+            },
+            {
+              "path": [
+                2751451290,
+                39878229,
+                986654846,
+                300722653,
+                189399723
+              ],
+              "media_id": 997120013,
+              "sha256": "3cca779057ee9c94de4024784a5288a0b33da49b340a12e1b9ab5a0e331b7066"
+            }
+          ],
+          "switches": [
+            {
+              "node": 205057684,
+              "group": "switch_object_type",
+              "state": "crystal",
+              "children": [
+                880996780
+              ]
+            },
+            {
+              "node": 979573599,
+              "group": "character switch",
+              "state": "cleric",
+              "children": []
+            }
+          ]
+        },
+        {
+          "file": "push_failed_03.wav",
+          "duration": 0.607,
+          "layer_gain": 0.5773502691896258,
+          "peak_attenuation": 1.0,
+          "sha256": "f9c94e6ef3e0ff41376eca7c0da999d76f4ca618c05d6a68f5689f9fef498aca",
+          "sources": [
+            {
+              "path": [
+                2751451290,
+                196655700,
+                167129738,
+                205057684,
+                880996780,
+                53390301
+              ],
+              "media_id": 30172791,
+              "sha256": "17637f5468e6f1612cb5763e483d95a69f1ecbd3a2816000a1f3f7c13abbddf1"
+            },
+            {
+              "path": [
+                2751451290,
+                39878229,
+                986654846,
+                194688070,
+                838292140
+              ],
+              "media_id": 934454564,
+              "sha256": "f617ce6f2201eb68ed9fe4da3a54b15e43fd6c8a427f56dfdf08bdf2b956353f"
+            },
+            {
+              "path": [
+                2751451290,
+                39878229,
+                986654846,
+                300722653,
+                598051842
+              ],
+              "media_id": 471330706,
+              "sha256": "ba9ae1ad209069a5c701a4b693f67f7b1a4bf1935fc17ecdabca00594a89dde8"
+            }
+          ],
+          "switches": [
+            {
+              "node": 205057684,
+              "group": "switch_object_type",
+              "state": "crystal",
+              "children": [
+                880996780
+              ]
+            },
+            {
+              "node": 979573599,
+              "group": "character switch",
+              "state": "cleric",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "animation_markers": {
+    "idle": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_active_idle_01.sound_events",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "markers": []
+    },
+    "walk": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_active_moveForward_01.sound_events",
+      "sha256": "c87249bb8e5f202e38c26544ab3f241680f0c363833b8f8af65b7646dfd5cbda",
+      "markers": [
+        {
+          "at": 0.42,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.92,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        }
+      ]
+    },
+    "push": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_push_walkForward_01.sound_events",
+      "sha256": "a3d54eed94c919655373d942315ca43d6ab758b0b429fa0ce87ce8f1883174c2",
+      "markers": [
+        {
+          "at": 0.4,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.9,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        }
+      ]
+    },
+    "turn_left": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_active_idleToMove90Left_01.sound_events",
+      "sha256": "53843a7df0cfe040efb8cb75b5a5c6d482d52dc1af9752577c88dd7da4ba3ab1",
+      "markers": [
+        {
+          "at": 0.1,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.46,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.96,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        }
+      ]
+    },
+    "turn_right": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_active_idleToMove90Right_01.sound_events",
+      "sha256": "9c5ff0f30ec7db7217f56b38557370fee2fec0b1796d051936ec59767887e97b",
+      "markers": [
+        {
+          "at": 0.1,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.46,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.96,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        }
+      ]
+    },
+    "turn_back": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_active_idleToMove180Right_01.sound_events",
+      "sha256": "9a923f44fc0ff2216f78a42b7619a37bb5541da80caaf7b8596044abc006a7a3",
+      "markers": [
+        {
+          "at": 0.16,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.46,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.93,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        }
+      ]
+    },
+    "push_turn_left": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_active_idleToPushMove90Left_01.sound_events",
+      "sha256": "aa09e27f79a522065f52902409cd4026cf0af5f132c52c5af4023abde7f0cdc6",
+      "markers": [
+        {
+          "at": 0.13,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.46,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.86,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        }
+      ]
+    },
+    "push_turn_right": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_active_idleToPushMove90Right_01.sound_events",
+      "sha256": "bf1576a375cb838b05d97c628d7dcbcb7bb2d9c9b853b5943ee4c6eb805e4371",
+      "markers": [
+        {
+          "at": 0.13,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.56,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.86,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        }
+      ]
+    },
+    "push_turn_back": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_active_idleToPushMove180Right_01.sound_events",
+      "sha256": "f4e02563753b0f2d3edfdcd7ab81077ff72ec49d9cda7b677df5825760feb775",
+      "markers": [
+        {
+          "at": 0.2,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.6,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        },
+        {
+          "at": 0.9,
+          "event": "char_cleric_anim_step_slowMoOnly"
+        }
+      ]
+    },
+    "blocked": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_active_bumpForward_01.sound_events",
+      "sha256": "60b363d27432193d185ed8d64a16286614ae72586c597230091fd7350d5760bd",
+      "markers": [
+        {
+          "at": 0.02,
+          "event": "char_cleric_anim_cloth"
+        },
+        {
+          "at": 0.05,
+          "event": "char_cleric_anim_footStop"
+        },
+        {
+          "at": 0.35,
+          "event": "char_cleric_anim_footStop"
+        },
+        {
+          "at": 0.38,
+          "event": "char_cleric_anim_cloth"
+        }
+      ]
+    },
+    "blocked_left": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_active_idleToBlocked90Left_01.sound_events",
+      "sha256": "299988d5c98fbed6fbc3c77abb10663ba3d25979698a2738ebb45e281cd34062",
+      "markers": [
+        {
+          "at": 0.0,
+          "event": "char_cleric_anim_footStop"
+        },
+        {
+          "at": 0.1,
+          "event": "char_cleric_anim_footStop_lo"
+        },
+        {
+          "at": 0.15,
+          "event": "char_cleric_anim_cloth"
+        },
+        {
+          "at": 0.15,
+          "event": "char_cleric_anim_footStop"
+        }
+      ]
+    },
+    "blocked_right": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_active_idleToBlocked90Right_01.sound_events",
+      "sha256": "e8f0bb256ec9d157266707e80d53edcaaba0ed48efc334ea958046811efe8182",
+      "markers": [
+        {
+          "at": 0.03,
+          "event": "char_cleric_anim_footStop"
+        },
+        {
+          "at": 0.15,
+          "event": "char_cleric_anim_footStop"
+        },
+        {
+          "at": 0.17,
+          "event": "char_cleric_anim_cloth"
+        }
+      ]
+    },
+    "blocked_back": {
+      "source": "data/art/animation/soko_cleric/animation/cleric_active_idleToBlocked180Right_01.sound_events",
+      "sha256": "c4c4b17369b6241feebbaa397532ccec2e9e1899c7696b0751a160f313676781",
+      "markers": [
+        {
+          "at": 0.0,
+          "event": "char_cleric_anim_stickSlide"
+        },
+        {
+          "at": 0.1,
+          "event": "char_cleric_anim_cloth"
+        },
+        {
+          "at": 0.1,
+          "event": "char_cleric_anim_footStop"
+        },
+        {
+          "at": 0.16,
+          "event": "char_cleric_anim_footStop"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "source_id": "GAME_SOKO_Crystal_A",
+  "game": "E:/SteamLibrary/steamapps/common/Order of the Sinking Star Demo",
+  "format_version": 1,
+  "source": "data-common/GAME_SOKO_Crystal_A.compressed_mesh",
+  "sha256": "b4b90c7870d214ccfef2cbf6523f182f6afc568723edcac634879be1a21895fa",
+  "mesh": {
+    "vertices": 4849,
+    "triangles": 3962,
+    "joints": 0,
+    "lod": 0,
+    "bounds_min": [
+      -0.43193326991210995,
+      0.0,
+      -0.4370421850513767
+    ],
+    "bounds_max": [
+      0.43193326991210995,
+      0.9400000000000001,
+      0.4370421850513767
+    ],
+    "source_bounds": [
+      -0.5406990647315979,
+      -0.5168130397796631,
+      -0.09193697571754456,
+      0.5194384455680847,
+      0.5558637976646423,
+      1.0616315603256226
+    ],
+    "uniform_scale": 0.8148627243460329,
+    "coordinates": "Y up, base at Y=0, fits inside a unit tile"
+  },
+  "materials": [
+    {
+      "name": "crystal_Block_A",
+      "first": 0,
+      "count": 11886,
+      "texture": "textures/Crystal_Block_A-diffuse.png",
+      "core": [
+        0.05241,
+        0.094233,
+        0.65606
+      ],
+      "rim": [
+        0.544742,
+        0.452626,
+        0.956488
+      ],
+      "emissive": 0.241379,
+      "source_fields": {
+        "shader": "\"crystal_general\"",
+        "flag": "Enable_Internal_Outlines",
+        "outline_depth_modifier": "1",
+        "use_tint_mask": "true",
+        "color_glancing": "(0.544742 0.452626 0.956488)",
+        "emissive_mult": "0.241379",
+        "fract_accum_pow": "3.057416",
+        "rough_max": "1",
+        "tint_mask_tex": "\"Crystal_Block_A-mask\"",
+        "parallax_bright_mult": "1.885058",
+        "core_color_mode": "2",
+        "tint_color_B": "(1 1 1 0)",
+        "enable_SSR": "true",
+        "refraction_transmission": "0.866973",
+        "use_ev100_units": "false",
+        "fresnel_pow": "4.612727",
+        "Crystal_Color_Map": "\"Crystal_Block_A-diffuse\"",
+        "relative_to_ec": "true",
+        "ambient_occlusion_factor": "1",
+        "fresnel_rim": "5",
+        "core_additionaL_emissive": "0",
+        "reflectance": "0.7",
+        "color_core": "(0.05241 0.094233 0.65606)",
+        "enable_fractures": "true",
+        "refract_brightness": "0",
+        "fracture_color": "(0.54013 0.54013 0.54013)",
+        "fracture_tiling": "1.3",
+        "refraction_is_glass_panel": "false",
+        "Crystal_Properties_Map": "\"Crystal_Block_A-mask\"",
+        "enable_per_entity_additional_emissive": "true",
+        "parallax_amt": "0.402299",
+        "tint_masked_mult_by_color_B": "true",
+        "fracture_samples": "24",
+        "fract_toplayer_fade": "0.635058",
+        "refract_displace": "0.040395",
+        "roughness": "0",
+        "properties_mode": "1",
+        "Fracture_height_map": "\"Crystal_POM_Test_A\"",
+        "rough_min": "0",
+        "tint_color_A": "(1 1 1 0)",
+        "tint_mask_channel": "2",
+        "additional_emissive_range": "25",
+        "swap_entity_colors": "false",
+        "SSR_distance": "2",
+        "parent": "\"crystal_temp_A\""
+      },
+      "texture_sha256": "7f746aea20d3e1c95db7b0d411f756a1335101f3ba223eded90eed4acbc29c28"
+    }
+  ],
+  "outline_reference": {
+    "mappings": [
+      "cleric entity_outline",
+      "GAME_SOKO_Crystal_A entity_outline"
+    ],
+    "fields": {
+      "shader": "\"entity_outline\"",
+      "flag": "Dynamic",
+      "outline_depth_modifier": "1",
+      "outline_z_cutoff": "0.337423",
+      "outline_color": "(0 0 0 0)",
+      "minimum_outline_intensity": "0",
+      "gradient_texture": "\"RAMP_OutlineThickness_A\"",
+      "outline_width": "2.809818",
+      "use_exponential_thinning": "false",
+      "thinning_mode": "1"
+    },
+    "shader": "data-pc/entity_outline--2048.shader",
+    "sha256": "7ced9064c8549ae44e6d278ffb6cb2461632e6912e68715f0078570b09232564",
+    "note": "Compiled DirectX shader. SGPU uses a depth-tested inverted hull; no native shader is copied."
+  }
+}

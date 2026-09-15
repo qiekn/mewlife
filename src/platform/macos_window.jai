@@ -1,7 +1,7 @@
 create_window_metal :: (width: int, height: int, window_name: string, window_x := -1, window_y := -1, parent: Window_Type = null, background_color_rgb := DEFAULT_WINDOW_CREATION_COLOR, wanted_msaa := DEFAULT_MSAA) -> *NSWindow {
     if !application_initialized init_mac_app();
 
-    // On MacOS, window dimensions are specified in points, not pixels.
+    // macOS windows use points; the platform entry point receives physical pixels.
     // To be consistent with our other APIs, we assume width and height to be in pixels
     // and convert them to points here. :MacHighResDisplays:
     target_screen := NSScreen.mainScreen();

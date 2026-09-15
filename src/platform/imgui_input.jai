@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------: Jai window and input backend
+// ----------------------------------------------------------------------------: ImGui platform input backend
 
 Imgui_Input :: struct {
     window: u64;
@@ -58,7 +58,8 @@ imgui_input_window_size :: (window: u64) -> s32, s32 {
 // Call after Input.update_window_events(), including while the window is minimized.
 // For rendered frames, call after swapchain acquisition so mouse coordinates are fresh at NewFrame.
 // Jai's window helpers report physical client pixels; ImGui operates in logical coordinates.
-imgui_input_update :: (input: *Imgui_Input, width: s32, height: s32, dpi_scale: float) {
+imgui_input_update :: (input: *Imgui_Input, width: s32, height: s32, dpi_scale: float,
+                       skip_text_event: s64 = -1) {
     io := ImGui.GetIO();
     now := seconds_since_init();
     io.DeltaTime = cast(float) max(now - input.last_time, 0.000001);
@@ -79,7 +80,12 @@ imgui_input_update :: (input: *Imgui_Input, width: s32, height: s32, dpi_scale: 
         io.AddMousePosEvent(io, -FLOAT32_MAX, -FLOAT32_MAX);
     }
 
-    for event: Input.events_this_frame {
+    imgui_input_forward_events(io, Input.events_this_frame, skip_text_event);
+}
+
+// Kept separate from native pointer sampling so routing can also be checked offscreen.
+imgui_input_forward_events :: (io: *ImGui.IO, events: [] Input.Event, skip_text_event: s64 = -1) {
+    for event: events {
         if event.type == {
             case .KEYBOARD;
                 down := event.key_pressed != 0;
@@ -96,6 +102,7 @@ imgui_input_update :: (input: *Imgui_Input, width: s32, height: s32, dpi_scale: 
                     if key != .None then io.AddKeyEvent(io, key, down);
                 }
             case .TEXT_INPUT;
+                if it_index == skip_text_event then continue;
                 #if OS == .WINDOWS {
                     // Input forwards WM_CHAR UTF-16 code units on Windows.
                     io.AddInputCharacterUTF16(io, xx event.utf32);

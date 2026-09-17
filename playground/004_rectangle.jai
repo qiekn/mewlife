@@ -10,7 +10,7 @@ main :: () {
     defer gpu_shutdown();
 
     // Window
-    window := create_native_window(1200, 800, "ck: TRIANGLE");
+    window := create_native_window(1200, 800, "ck: RECTANGLE");
 
     window_type: Native_Window_Type;
     #if      OS == .WINDOWS then window_type = .WIN32;

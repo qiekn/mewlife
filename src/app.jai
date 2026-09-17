@@ -28,27 +28,31 @@ App :: struct {
 }
 
 app_init :: (app: *App) {
+    // Meshes
     assert(model_load(*app.model, "assets/models/priestess/priestess.meshbin"), "Cannot load Priestess mesh.");
     assert(model_load(*app.crystal, "assets/models/crystal/crystal.meshbin"), "Cannot load crystal mesh.");
+    // Animaton - Basic
     assert(animation_load(*app.idle, "assets/models/priestess/idle.animbin", "Idle", app.model.joints.count));
     assert(animation_load(*app.walk, "assets/models/priestess/walk.animbin", "Walk", app.model.joints.count));
     assert(animation_load(*app.push, "assets/models/priestess/push.animbin", "Push", app.model.joints.count));
+    // Animation - Transitions
     for name: string.["left", "right", "back"] {
-        assert(animation_load(*app.turns[it_index], tprint("assets/models/priestess/turn_%.animbin", name),
-                               tprint("Turn %", name), app.model.joints.count));
-        assert(animation_load(*app.push_turns[it_index], tprint("assets/models/priestess/push_turn_%.animbin", name),
-                               tprint("Push turn %", name), app.model.joints.count));
+        assert(animation_load(*app.turns[it_index],      tprint("assets/models/priestess/turn_%.animbin", name),      tprint("Turn %", name), app.model.joints.count));
+        assert(animation_load(*app.push_turns[it_index], tprint("assets/models/priestess/push_turn_%.animbin", name), tprint("Push turn %", name), app.model.joints.count));
     }
     for name: string.["blocked", "blocked_left", "blocked_right", "blocked_back"] {
-        assert(animation_load(*app.blocked_clips[it_index], tprint("assets/models/priestess/%.animbin", name),
-                              name, app.model.joints.count));
+        assert(animation_load(*app.blocked_clips[it_index], tprint("assets/models/priestess/%.animbin", name), name, app.model.joints.count));
     }
+    // Animator
     animator_init(*app.animator, *app.model);
+    // Sounds
     app_load_sounds(app);
     game_reset(*app.game);
+    // Editor
     editor_reset_camera(*app.editor, false);
     editor_reset_gameplay_camera(*app.editor);
-    console_log(*app.console, "mewlife console", .COMMENT);
+    // Ingame Console
+    console_log(*app.console, "Mewlife console", .COMMENT);
     console_log(*app.console, "Type help. Use toggle full, toggle small or toggle mini to change size.");
 }
 
@@ -75,22 +79,28 @@ app_init_scene :: (app: *App, scene: *Scene_Renderer) {
 app_run :: () {
     assert(gpu_init() == .SUCCESS);
     defer gpu_shutdown();
+
     app: App;
     app_init(*app);
     defer app_shutdown(*app);
 
     imgui_input_prepare_window();
     window := create_native_window(1600, 900, "ck: ENIGMASH");
-    if !audio_init(*app.audio) then console_log(*app.console, "No audio output device; continuing silently.", .ERROR);
+    if !audio_init(*app.audio) {
+        console_log(*app.console, "No audio output device; continuing silently.", .ERROR);
+    }
+
     window_type: Native_Window_Type;
     #if      OS == .WINDOWS then window_type = .WIN32;
     else #if OS == .LINUX   then window_type = .X11;
     else #if OS == .MACOS   then window_type = .COCOA;
     else assert(false, "Unsupported OS");
+
     gpu_init_swapchain(window, window_type, preferred_present_modes = .[.MAILBOX, .FIFO], min_image_count = 2);
     defer gpu_destroy_swapchain();
     queue := gpu_get_queue(.MAIN, 0);
 
+    // ImGui
     imgui_context := ImGui.CreateContext();
     assert(imgui_context != null);
     defer ImGui.DestroyContext(imgui_context);
@@ -111,6 +121,7 @@ app_run :: () {
     ui: Imgui_Sgpu;
     imgui_sgpu_init(*ui);
     defer imgui_sgpu_shutdown(*ui);
+
     scene: Scene_Renderer;
     app_init_scene(*app, *scene);
     defer scene_shutdown(*scene);
@@ -119,8 +130,11 @@ app_run :: () {
     while !app.quit {
         defer reset_temporary_storage();
         Input.update_window_events();
-        for event: Input.events_this_frame if event.type == .QUIT then app.quit = true;
+        for event: Input.events_this_frame {
+            if event.type == .QUIT then app.quit = true;
+        }
         if app.quit then break;
+
         platform_read_input(*input);
         if Input.get_window_resizes().count > 0 then needs_resize = true;
         width, height := imgui_input_window_size(window);

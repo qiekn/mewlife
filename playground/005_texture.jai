@@ -142,7 +142,6 @@ main :: () {
                     }
                 ]
             };
-
             gpu_begin_render_pass(cmd_buff,render_desc);
             gpu_set_depth_stencil_state(cmd_buff, depth_desc);
 

@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------: ImGui SGPU renderer
 
-Imgui_Sgpu :: struct {
+Renderer :: struct {
     font_texture: Gpu_Texture;
     font_view: Gpu_Texture_View;
     sampler: Gpu_Sampler;
@@ -12,15 +12,15 @@ Imgui_Sgpu :: struct {
     timeline: Gpu_Semaphore;
     submitted_value: u64;
     frame_cursor: int;
-    frames: [3] Imgui_Sgpu_Frame;
+    frames: [3] Frame;
 }
 
-imgui_sgpu_init :: (renderer: *Imgui_Sgpu) {
+renderer_init :: (renderer: *Renderer) {
     #assert(size_of(ImGui.ImDrawVert) == 20);
     #assert(size_of(ImGui.ImDrawIdx) == 2);
     #assert(size_of(ImGui.ImDrawCallback) == size_of(s64));
-    #assert(size_of(Imgui_Vertex_Parameters) == 24);
-    #assert(size_of(Imgui_Draw_Parameters) == 32);
+    #assert(size_of(Vertex_Parameters) == 24);
+    #assert(size_of(Draw_Parameters) == 32);
 
     io := ImGui.GetIO();
     assert(io.BackendRendererUserData == null);
@@ -40,10 +40,10 @@ imgui_sgpu_init :: (renderer: *Imgui_Sgpu) {
     renderer.sampler = gpu_create_sampler(.{mip_lod_bias = 0, max_lod = 0}, "ImGui sampler");
     assert(renderer.sampler != 0);
 
-    imgui_sgpu_upload_font_atlas(renderer);
+    upload_font_atlas(renderer);
 }
 
-imgui_sgpu_upload_font_atlas :: (renderer: *Imgui_Sgpu) {
+upload_font_atlas :: (renderer: *Renderer) {
     // DPI changes replace the atlas. Previous frames must stop sampling the old image first.
     gpu_wait_idle();
     if renderer.font_texture != 0 then gpu_free(renderer.font_texture);
@@ -81,18 +81,18 @@ imgui_sgpu_upload_font_atlas :: (renderer: *Imgui_Sgpu) {
     gpu_submit(cmd);
     gpu_queue_wait_idle(queue);
 
-    io.Fonts.TexID = imgui_sgpu_texture_id(renderer.font_view);
+    io.Fonts.TexID = texture_id(renderer.font_view);
 }
 
 // Texture IDs are SGPU texture views. Images share the renderer's linear sampler.
 // The caller keeps user textures alive until submissions using them have completed.
-imgui_sgpu_texture_id :: (view: Gpu_Texture_View) -> ImGui.ImTextureID {
+texture_id :: (view: Gpu_Texture_View) -> ImGui.ImTextureID {
     return cast(ImGui.ImTextureID) view.(u64);
 }
 
 // Call inside a render pass, after scene rendering. Signal the returned timeline
 // in the submission containing cmd, including frames with no UI geometry.
-imgui_sgpu_render :: (renderer: *Imgui_Sgpu, cmd: Gpu_Command_Buffer,
+render :: (renderer: *Renderer, cmd: Gpu_Command_Buffer,
                       target: Gpu_Texture_View, data: *ImGui.ImDrawData) -> Gpu_Timeline_Pair {
     renderer.submitted_value += 1;
     completion := Gpu_Timeline_Pair.{renderer.timeline, renderer.submitted_value};
@@ -107,7 +107,7 @@ imgui_sgpu_render :: (renderer: *Imgui_Sgpu, cmd: Gpu_Command_Buffer,
     // Use the actual attachment size to avoid losing a pixel to fractional-DPI rounding.
     framebuffer_width := desc.dimensions[0].(s32);
     framebuffer_height := desc.dimensions[1].(s32);
-    imgui_sgpu_ensure_pipeline(renderer, desc.format);
+    ensure_pipeline(renderer, desc.format);
 
     frame := *renderer.frames[renderer.frame_cursor];
     renderer.frame_cursor = (renderer.frame_cursor + 1) % renderer.frames.count;
@@ -124,7 +124,7 @@ imgui_sgpu_render :: (renderer: *Imgui_Sgpu, cmd: Gpu_Command_Buffer,
     index_bytes := data.TotalIdxCount.(s64) * size_of(ImGui.ImDrawIdx);
     index_offset := align_forward(vertex_bytes, 16);
     parameters_offset := align_forward(index_offset + index_bytes, 16);
-    required_size := parameters_offset + command_count * size_of(Imgui_Draw_Parameters);
+    required_size := parameters_offset + command_count * size_of(Draw_Parameters);
     if required_size > frame.capacity {
         if frame.cpu != null then gpu_free(frame.cpu);
         frame.capacity = max(required_size, max(frame.capacity * 2, 64 * 1024));
@@ -135,12 +135,12 @@ imgui_sgpu_render :: (renderer: *Imgui_Sgpu, cmd: Gpu_Command_Buffer,
     }
     frame.completion_value = completion.value;
 
-    imgui_sgpu_set_render_state(renderer, cmd, framebuffer_width, framebuffer_height);
+    set_render_state(renderer, cmd, framebuffer_width, framebuffer_height);
 
     // SGPU compiles Slang with VulkanInvertY, so the pre-inversion Y axis points up.
     scale := Vector2.{2.0 / data.DisplaySize.x, -2.0 / data.DisplaySize.y};
     translate := Vector2.{-1.0 - data.DisplayPos.x * scale.x, 1.0 - data.DisplayPos.y * scale.y};
-    parameters := cast(*Imgui_Draw_Parameters) (frame.cpu + parameters_offset);
+    parameters := cast(*Draw_Parameters) (frame.cpu + parameters_offset);
     global_vertex_offset: s64;
     global_index_offset: s64;
     command_index: s64;
@@ -157,7 +157,7 @@ imgui_sgpu_render :: (renderer: *Imgui_Sgpu, cmd: Gpu_Command_Buffer,
             if draw.UserCallback != null {
                 // ImDrawCallback_ResetRenderState is the sentinel pointer -8 in ImGui 1.89.6.
                 if (cast(*s64) *draw.UserCallback).* == -8 {
-                    imgui_sgpu_set_render_state(renderer, cmd, framebuffer_width, framebuffer_height);
+                    set_render_state(renderer, cmd, framebuffer_width, framebuffer_height);
                 } else {
                     draw.UserCallback(list, draw);
                 }
@@ -178,8 +178,8 @@ imgui_sgpu_render :: (renderer: *Imgui_Sgpu, cmd: Gpu_Command_Buffer,
                 vertex = .{frame.gpu + vertex_offset.(Gpu_Ptr), scale, translate},
                 pixel = .{cast(Gpu_Texture_View) draw.TextureId.(u64), renderer.sampler},
             };
-            vertex_parameters := frame.gpu + cast(Gpu_Ptr) (parameters_offset + command_index * size_of(Imgui_Draw_Parameters));
-            pixel_parameters := vertex_parameters + cast(Gpu_Ptr) size_of(Imgui_Vertex_Parameters);
+            vertex_parameters := frame.gpu + cast(Gpu_Ptr) (parameters_offset + command_index * size_of(Draw_Parameters));
+            pixel_parameters := vertex_parameters + cast(Gpu_Ptr) size_of(Vertex_Parameters);
             indices := frame.gpu + cast(Gpu_Ptr) (index_offset + (global_index_offset + draw.IdxOffset) * size_of(ImGui.ImDrawIdx));
             result := gpu_draw_indexed_instanced(cmd, vertex_parameters, pixel_parameters, indices,
                                                 draw.ElemCount, 1, index_size = size_of(ImGui.ImDrawIdx));
@@ -194,7 +194,7 @@ imgui_sgpu_render :: (renderer: *Imgui_Sgpu, cmd: Gpu_Command_Buffer,
     return completion;
 }
 
-imgui_sgpu_shutdown :: (renderer: *Imgui_Sgpu) {
+renderer_shutdown :: (renderer: *Renderer) {
     gpu_wait_idle();
     for renderer.frames {
         if it.cpu != null then gpu_free(it.cpu);
@@ -216,28 +216,28 @@ imgui_sgpu_shutdown :: (renderer: *Imgui_Sgpu) {
 
 #scope_file
 
-Imgui_Sgpu_Frame :: struct {
+Frame :: struct {
     cpu: *u8;
     gpu: Gpu_Ptr;
     capacity: s64;
     completion_value: u64;
 }
 
-Imgui_Vertex_Parameters :: struct {
+Vertex_Parameters :: struct {
     vertices: Gpu_Ptr;
     scale: Vector2;
     translate: Vector2;
 }
 
-Imgui_Draw_Parameters :: struct {
-    vertex: Imgui_Vertex_Parameters;
+Draw_Parameters :: struct {
+    vertex: Vertex_Parameters;
     pixel: struct {
         texture: Gpu_Texture_View;
         sampler: Gpu_Sampler;
     };
 }
 
-imgui_sgpu_ensure_pipeline :: (renderer: *Imgui_Sgpu, format: Format) {
+ensure_pipeline :: (renderer: *Renderer, format: Format) {
     if renderer.pipeline != 0 && renderer.format == format then return;
     if renderer.pipeline != 0 {
         gpu_wait_idle();
@@ -258,7 +258,7 @@ imgui_sgpu_ensure_pipeline :: (renderer: *Imgui_Sgpu, format: Format) {
     renderer.format = format;
 }
 
-imgui_sgpu_set_render_state :: (renderer: *Imgui_Sgpu, cmd: Gpu_Command_Buffer, width: s32, height: s32) {
+set_render_state :: (renderer: *Renderer, cmd: Gpu_Command_Buffer, width: s32, height: s32) {
     result := gpu_set_pipeline(cmd, renderer.pipeline);
     assert(result == .SUCCESS);
     gpu_set_depth_stencil_state(cmd, .{

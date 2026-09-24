@@ -71,6 +71,7 @@ gpu_malloc :: (size: s64, memory_type: Memory_Type = .DEFAULT) -> (mapped: *void
     mapped := null;
     if memory_type != .GPU {
         mapped = alloc_info.pMappedData;
+        result.mapped = mapped;
         table_add(*cpu_allocations, mapped, result);
     }
 
@@ -105,6 +106,14 @@ gpu_free :: (gpu_ptr: Gpu_Ptr) {
     if removed {
         vmaDestroyBuffer(vma, alloc.vk_buffer, alloc.allocation);
 
+        // Host-visible allocations are also registered by their mapped pointer. Drop that entry too,
+        // otherwise a later allocation that reuses the same mapped address collides with this stale
+        // record and gpu_free(*void) destroys the wrong buffer.
+        if alloc.mapped != null {
+            removed = table_remove(*cpu_allocations, alloc.mapped);
+            debug_assert(removed);
+        }
+
         removed = remove_gpu_memory_range(alloc.gpu_ptr);
         debug_assert(removed);
     }
@@ -127,6 +136,7 @@ Alloc_Info :: struct {
     allocation: VmaAllocation;
     gpu_ptr: Gpu_Ptr;
     type: Memory_Type;
+    mapped: *void;   // null for .GPU allocations.
 
     vk_buffer: VkBuffer;
 }

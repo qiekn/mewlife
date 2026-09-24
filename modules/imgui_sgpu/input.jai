@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------: ImGui platform input backend
 
-Imgui_Input :: struct {
+Input_Backend :: struct {
     window: u64;
     last_time: float64;
     focused: bool;
@@ -8,14 +8,14 @@ Imgui_Input :: struct {
 }
 
 // Install before creating the single native window. DPI awareness is set by the executable manifest.
-imgui_input_prepare_window :: () {
+prepare_window :: () {
     #if OS == .WINDOWS {
         previous_window_proc = context.input_handler.window_proc;
-        context.input_handler.window_proc = imgui_window_proc;
+        context.input_handler.window_proc = window_proc_hook;
     }
 }
 
-imgui_input_dpi_scale :: (window: u64) -> float {
+window_dpi_scale :: (window: u64) -> float {
     #if OS == .WINDOWS {
         dpi := get_dpi_for_window(cast(Win32.HWND) window);
         return max(dpi, 96).(float) / 96.0;
@@ -26,7 +26,7 @@ imgui_input_dpi_scale :: (window: u64) -> float {
     }
 }
 
-imgui_input_init :: (input: *Imgui_Input, window: u64) {
+input_init :: (input: *Input_Backend, window: u64) {
     input.window = window;
     input.last_time = seconds_since_init();
     io := ImGui.GetIO();
@@ -46,7 +46,7 @@ imgui_input_init :: (input: *Imgui_Input, window: u64) {
     }
 }
 
-imgui_input_window_size :: (window: u64) -> s32, s32 {
+window_size :: (window: u64) -> s32, s32 {
     #if OS == .WINDOWS {
         if Input.window_minimized then return 0, 0;
     }
@@ -58,7 +58,7 @@ imgui_input_window_size :: (window: u64) -> s32, s32 {
 // Call after Input.update_window_events(), including while the window is minimized.
 // For rendered frames, call after swapchain acquisition so mouse coordinates are fresh at NewFrame.
 // Jai's window helpers report physical client pixels; ImGui operates in logical coordinates.
-imgui_input_update :: (input: *Imgui_Input, width: s32, height: s32, dpi_scale: float,
+input_update :: (input: *Input_Backend, width: s32, height: s32, dpi_scale: float,
                        skip_text_event: s64 = -1) {
     io := ImGui.GetIO();
     now := seconds_since_init();
@@ -80,11 +80,11 @@ imgui_input_update :: (input: *Imgui_Input, width: s32, height: s32, dpi_scale: 
         io.AddMousePosEvent(io, -FLOAT32_MAX, -FLOAT32_MAX);
     }
 
-    imgui_input_forward_events(io, Input.events_this_frame, skip_text_event);
+    forward_events(io, Input.events_this_frame, skip_text_event);
 }
 
 // Kept separate from native pointer sampling so routing can also be checked offscreen.
-imgui_input_forward_events :: (io: *ImGui.IO, events: [] Input.Event, skip_text_event: s64 = -1) {
+forward_events :: (io: *ImGui.IO, events: [] Input.Event, skip_text_event: s64 = -1) {
     for event: events {
         if event.type == {
             case .KEYBOARD;
@@ -94,11 +94,11 @@ imgui_input_forward_events :: (io: *ImGui.IO, events: [] Input.Event, skip_text_
                 io.AddKeyEvent(io, .Mod_Alt, event.alt_pressed);
                 io.AddKeyEvent(io, .Mod_Super, event.cmd_meta_pressed);
 
-                button := imgui_mouse_button(event.key_code);
+                button := to_mouse_button(event.key_code);
                 if button >= 0 {
                     io.AddMouseButtonEvent(io, button, down);
                 } else {
-                    key := imgui_key(event.key_code);
+                    key := to_key(event.key_code);
                     if key != .None then io.AddKeyEvent(io, key, down);
                 }
             case .TEXT_INPUT;
@@ -117,7 +117,7 @@ imgui_input_forward_events :: (io: *ImGui.IO, events: [] Input.Event, skip_text_
     }
 }
 
-imgui_input_update_cursor :: (input: *Imgui_Input) {
+update_cursor :: (input: *Input_Backend) {
     #if OS == .WINDOWS {
         io := ImGui.GetIO();
         if io.ConfigFlags_ & .NoMouseCursorChange then return;
@@ -137,7 +137,7 @@ imgui_input_update_cursor :: (input: *Imgui_Input) {
     }
 }
 
-imgui_input_shutdown :: (input: *Imgui_Input) {
+input_shutdown :: (input: *Input_Backend) {
     #if OS == .WINDOWS {
         Input.set_custom_cursor_handling(false);
         context.input_handler.window_proc = previous_window_proc;
@@ -151,7 +151,7 @@ imgui_input_shutdown :: (input: *Imgui_Input) {
 
 #scope_file
 
-imgui_mouse_button :: (key: Input.Key_Code) -> s32 {
+to_mouse_button :: (key: Input.Key_Code) -> s32 {
     if key == {
         case .MOUSE_BUTTON_LEFT;    return 0;
         case .MOUSE_BUTTON_RIGHT;   return 1;
@@ -162,7 +162,7 @@ imgui_mouse_button :: (key: Input.Key_Code) -> s32 {
     return -1;
 }
 
-imgui_key :: (key: Input.Key_Code) -> ImGui.Key {
+to_key :: (key: Input.Key_Code) -> ImGui.Key {
     value := key.(u32);
     if value >= #char "A" && value <= #char "Z" {
         return cast(ImGui.Key) (ImGui.Key.A.(u32) + value - #char "A");
@@ -226,7 +226,7 @@ Window :: #import "Window_Creation"(DEFAULT_MSAA = 1);
     get_dpi_for_window :: (window: Win32.HWND) -> u32 #foreign user32 "GetDpiForWindow";
     previous_window_proc: type_of(Input.MyWindowProc);
 
-    imgui_window_proc :: (window: Win32.HWND, message: u32,
+    window_proc_hook :: (window: Win32.HWND, message: u32,
                           wparam: Win32.WPARAM, lparam: Win32.LPARAM) -> s64 #c_call {
         push_context {
             if message == Win32.WM_DPICHANGED {

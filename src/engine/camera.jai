@@ -1,83 +1,105 @@
-// ----------------------------------------------------------------------------: Camera in metres, Y up
+//  使用右手系，Y 朝上，单位是米
+Camera :: struct {
+    position := Vector3.{0, 0, 3};
+    yaw:   float;                  // 左右转头
+    pitch: float;                  // 上下抬头
+
+    fov:   float = 60 * PI / 180;  // Vertical field of view, radians.
+
+    near_plane: float = 0.05;
+    far_plane:  float = 200;
+
+    move_speed: float = 2;         // Metres per second.
+    fast_multiplier: float = 4;    // Applied while Shift is held.
+
+    sensitivity: float = 0.0025;   // Radians per mouse count.
+}
+
+camera: Camera;
 
 Camera_Input :: struct {
-    move: Vector3; // Right, world up, forward.
-    look: Vector2; // Raw mouse delta, with no smoothing or frame-time multiplier.
+    move: Vector3;  // x: right, y: world up, z: forward. Each in [-1, 1], not normalized.
+    look: Vector2;  // Raw mouse delta in counts (x: right, y: down).
     fast: bool;
 }
 
-Camera_Projection :: enum { PERSPECTIVE; ORTHOGRAPHIC; }
-
-Camera :: struct {
-    position := Vector3.{5, 5, 7};
-    yaw: float;
-    pitch: float;
-    projection: Camera_Projection;
-    fov: float = 55 * PI / 180;
-    orthographic_height: float = 14; // Vertical span in world metres.
-    move_speed: float = 4;
-    sensitivity: float = 0.002;
-    near_plane: float = 0.05;
-    far_plane: float = 100;
+camera_forward :: () -> Vector3 {
+    cos_pitch := cos(camera.pitch);
+    return .{
+        sin(camera.yaw) * cos_pitch,
+        sin(camera.pitch),
+        -cos(camera.yaw) * cos_pitch
+    };
 }
 
-camera_forward :: (camera: *Camera) -> Vector3 {
-    return .{sin(camera.yaw) * cos(camera.pitch), sin(camera.pitch), -cos(camera.yaw) * cos(camera.pitch)};
-}
-
-camera_right :: (camera: *Camera) -> Vector3 {
-    // The yaw basis stays defined when looking straight down or up.
+camera_right :: () -> Vector3 {
+    // Depends on yaw only, so it stays well defined when looking straight up or down.
+    // cross(forward, world_up) would degenerate to zero there.
     return .{cos(camera.yaw), 0, sin(camera.yaw)};
 }
 
-camera_look_at :: (camera: *Camera, position: Vector3, target: Vector3) {
+camera_up :: () -> Vector3 {
+    return cross(camera_right(), camera_forward());
+}
+
+handle_camera_input :: (input: Camera_Input, dt: float) {
+    // Look. Screen Y grows downwards, so moving the mouse down should pitch down.
+    camera.yaw   += input.look.x * camera.sensitivity;
+    camera.pitch -= input.look.y * camera.sensitivity;
+    PITCH_LIMIT :: PI * 0.5 - 0.001;
+    camera.pitch = clamp(camera.pitch, -PITCH_LIMIT, PITCH_LIMIT);
+    if camera.yaw >  PI then camera.yaw -= 2 * PI;
+    if camera.yaw < -PI then camera.yaw += 2 * PI;
+
+    // Move. Combine the axes first, then normalize, so diagonal movement is not faster.
+    forward := camera_forward();
+    right   := camera_right();
+    move := right * input.move.x + Vector3.{0, 1, 0} * input.move.y + forward * input.move.z;
+    if dot(move, move) > 0.000001 {
+        speed := camera.move_speed * (ifx input.fast then camera.fast_multiplier else 1.0);
+        camera.position += unit_vector(move) * (speed * dt);
+    }
+}
+
+// Aims the camera at target from position.
+camera_look_at :: (position: Vector3, target: Vector3) {
     camera.position = position;
-    offset := target - position;
-    if dot(offset, offset) < 0.000001 then return;
-    direction := unit_vector(offset);
-    if abs(direction.x) + abs(direction.z) > 0.000001 then camera.yaw = atan2(direction.x, -direction.z);
+    direction := target - position;
+    if dot(direction, direction) < 0.000001 return;
+    direction = unit_vector(direction);
+    camera.yaw = atan2(direction.x, -direction.z);
     camera.pitch = asin(clamp(direction.y, -1.0, 1.0));
 }
 
-camera_update :: (camera: *Camera, input: Camera_Input, real_dt: float) {
-    camera.yaw += input.look.x * camera.sensitivity;
-    camera.pitch = clamp(camera.pitch - input.look.y * camera.sensitivity, -PI * 0.5, PI * 0.5);
-    forward := camera_forward(camera);
-    right := camera_right(camera);
-    move := right * input.move.x + Vector3.{0, 1, 0} * input.move.y + forward * input.move.z;
-    speed := camera.move_speed * (ifx input.fast then 4.0 else 1.0);
-    if dot(move, move) > 0.000001 then camera.position += unit_vector(move) * speed * real_dt;
+// World -> view. The camera's own transform is "rotate by R, then translate by p".
+// Its inverse is "translate by -p, then rotate by R^T". A rotation's inverse is its
+// transpose, so the rows of the view matrix are simply the camera's basis vectors.
+// View space looks down -Z, which is why the third row is -forward.
+view_matrix :: () -> Matrix4 {
+    forward := camera_forward();
+    right   := camera_right();
+    up      := cross(right, forward);
+    using view := Matrix4_Identity;
+    _11 =  right.x;   _12 =  right.y;   _13 =  right.z;   _14 = -dot(right, camera.position);
+    _21 =  up.x;      _22 =  up.y;      _23 =  up.z;      _24 = -dot(up, camera.position);
+    _31 = -forward.x; _32 = -forward.y; _33 = -forward.z; _34 =  dot(forward, camera.position);
+    return view;
 }
 
-camera_view_projection :: (camera: *Camera, aspect: float) -> Matrix4 {
-    forward := camera_forward(camera);
-    right := camera_right(camera);
-    up := cross(right, forward);
-    view := Matrix4_Identity;
-    view._11 = right.x;    view._12 = right.y;    view._13 = right.z;
-    view._21 = up.x;       view._22 = up.y;       view._23 = up.z;
-    view._31 = -forward.x; view._32 = -forward.y; view._33 = -forward.z;
-    view._14 = -dot(right, camera.position);
-    view._24 = -dot(up, camera.position);
-    view._34 = dot(forward, camera.position);
-    // Vulkan depth is [0, 1]. Slang handles Vulkan's Y inversion at compilation.
-    projection: Matrix4;
-    if camera.projection == .ORTHOGRAPHIC {
-        projection._22 = 2 / max(camera.orthographic_height, 0.01);
-        projection._11 = projection._22 / max(aspect, 0.01);
-        projection._33 = 1 / (camera.near_plane - camera.far_plane);
-        projection._34 = camera.near_plane * projection._33;
-        projection._44 = 1;
-    } else {
-        f := 1 / tan(camera.fov * 0.5);
-        projection._11 = f / max(aspect, 0.01);
-        projection._22 = f;
-        projection._33 = camera.far_plane / (camera.near_plane - camera.far_plane);
-        projection._34 = camera.near_plane * projection._33;
-        projection._43 = -1;
-    }
-    return projection * view;
+// 
+projection_matrix :: (aspect: float) -> Matrix4 {
+    f := 1 / tan(camera.fov * 0.5);
+    n := camera.near_plane;
+    r := camera.far_plane;
+    using projection: Matrix4;
+    _11 = f / max(aspect, 0.01);
+    _22 = f;
+    _33 = r / (n - r);
+    _34 = n * r / (n - r);
+    _43 = -1;  // clip w = -view z, so points in front of the camera get positive w.
+    return projection;
 }
 
-#scope_file
-#import "Math";
+view_projection :: (aspect: float) -> Matrix4 {
+    return projection_matrix(aspect) * view_matrix();
+}

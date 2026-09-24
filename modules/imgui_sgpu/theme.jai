@@ -1,7 +1,4 @@
-// ----------------------------------------------------------------------------: ImGui theme
-
-// ImGui style from .refs/theme.jai. Sizes stay logical; framebuffer scaling handles DPI.
-imgui_theme_apply_style :: () {
+apply_theme :: (dpi_scale: float = 1) {
     ImGui.StyleColorsDark();
 
     style := ImGui.GetStyle();
@@ -13,6 +10,7 @@ imgui_theme_apply_style :: () {
     style.WindowBorderSize = 1.0;
     style.FrameBorderSize = 0.0;
     style.WindowMenuButtonPosition = .None;
+    style.ScaleAllSizes(style, dpi_scale);
 
     style.Colors[ImGui.Col.WindowBg]           = color_rgb(0x1a1b1c);
     style.Colors[ImGui.Col.Header]             = color_rgb(0x333436);
@@ -32,4 +30,12 @@ imgui_theme_apply_style :: () {
     style.Colors[ImGui.Col.TitleBg]            = color_rgb(0x262727);
     style.Colors[ImGui.Col.TitleBgActive]      = color_rgb(0x262727);
     style.Colors[ImGui.Col.TitleBgCollapsed]   = color_rgb(0x262727);
+}
+
+#scope_file
+
+color_rgb :: inline (rgb: u32, alpha: float = 1) -> Vector4 {
+    return .{((rgb >> 16) & 0xff).(float) / 255,
+             ((rgb >> 8)  & 0xff).(float) / 255,
+             (rgb & 0xff).(float) / 255, alpha};
 }
